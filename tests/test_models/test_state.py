@@ -3,10 +3,19 @@
 
 from tests.test_models.test_base_model import test_basemodel
 from models.state import State
-
+import mysql.connector
 
 class test_state(test_basemodel):
     """ Test State model functionalities."""
+    def setUp(self):
+        # Connect to the test database
+        self.conn = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='@Adeola1234567',
+            database='AirBnB_clone_v2'
+        )
+        self.cursor = self.conn.cursor()
 
     def __init__(self, *args, **kwargs):
         """Initialize the attributes of the newly created object with specified """
