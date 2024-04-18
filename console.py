@@ -115,12 +115,24 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
-            print("** class name missing **")
-            return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
+        #if not args:
+            #print("** class name missing **")
+            #return
+        #elif args not in HBNBCommand.classes:
+            #print("** class doesn't exist **")
+            #return
+
+        # Create a table for testing (if not already created)
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS states (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL
+            )
+        """)
+
+        # Clear existing data in the table for a clean test
+        self.cursor.execute("DELETE FROM states")
+        self.connection.commit()
         new_instance = HBNBCommand.classes[args]()
         storage.save()
         print(new_instance.id)
