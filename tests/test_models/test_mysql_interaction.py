@@ -6,13 +6,18 @@ class TestMySQLInteraction(unittest.TestCase):
     def setUp(self):
         # Connect to your MySQL database
         self.connection = MySQLdb.connect(
-            host='localhost',
-            user='root',
-            password='@Adeola1234567',
-            database='AirBnB_clone_v2'
         )
         self.cursor = self.connection.cursor()
-
+    try:
+    self.connection = MySQLdb.connect(
+        host='localhost',
+        user='root',
+        password='@Adeola1234567',
+        database='AirBnB_clone_v2'
+        )
+    except MySQLdb.Error as e:
+        print(f"Error connecting to MySQL: {e}")
+        
         # Create a table for testing (if not already created)
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS states (
@@ -34,11 +39,16 @@ class TestMySQLInteraction(unittest.TestCase):
         # Get initial count of records in the table
         initial_count = self.get_record_count()
 
-        # Execute the command to add a new state
-        self.cursor.execute("INSERT INTO states (name) VALUES ('California')")
+        # Simulate the console command to add a new state
+        self.add_state_to_database("California")
+
+    def add_state_to_database(self, California):
+        # Execute SQL command to insert a new state into the 'states' table
+        insert_query = "INSERT INTO states (name) VALUES (%s)"
+        self.cursor.execute(insert_query, (California,))
         self.connection.commit()
 
-        # Get count of records after adding the state
+       # Get count of records after adding the state
         final_count = self.get_record_count()
 
         # Assert that the count increased by 1

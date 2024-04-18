@@ -12,7 +12,7 @@ class test_state(test_basemodel):
         """Initialize the attributes of the newly created object with specified."""
         super().__init__(*args, **kwargs)
         self.name = "State"
-        self.value = State
+        self.value = state
 
     def test_name3(self):
         """Test the behavior of the `name3` method."""
