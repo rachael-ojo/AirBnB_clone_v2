@@ -118,9 +118,57 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
+
+        args = shlex.split(arg)
+    class_name = args[0]
+
+    elif args not in HBNBCommand.classes:
+        print("** class doesn't exist **")
+        return
+
+    if len(args) < 2:
+        print("** parameters missing **")
+        return
+
+    # Extract parameters
+    params = {}
+    for param in args[1:]:
+        if '=' in param:
+            key, value = param.split('=', 1)
+            key = key.strip()
+            value = value.strip()
+
+            # Handle string value
+            if value.startswith('"') and value.endswith('"'):
+                # Strip surrounding quotes
+                value = value[1:-1]
+
+                # Replace escaped quotes
+                value = value.replace('\\"', '"')
+
+                # Replace underscores with spaces
+                value = value.replace('_', ' ')
+
+                params[key] = value
+
+            # Handle float value
+            elif '.' in value:
+                try:
+                    params[key] = float(value)
+                except ValueError:
+                    continue
+
+            # Handle integer value
+            else:
+                try:
+                    params[key] = int(value)
+                except ValueError:
+                    continue
+
+    # Create instance of the specified class with parameters
+    instance = self.classes[class_name](**params)
+    instance.save()
+    print(instance.id)
 
         # Clear existing data in the table for a clean test
         self.cursor.execute("DELETE FROM states")
